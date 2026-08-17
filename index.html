@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Zain Mart - Online Superstore & Express Grocery Delivery</title>
+  <meta name="description" content="Shop fresh organic groceries, daily dairy, premium fruits, meats, beverages and household items at Zain Mart. Express 30-minute doorstep delivery." />
+  
+  <!-- CSS Stylesheet -->
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+  <!-- Top Announcement Bar -->
+  <div class="top-bar">
+    <div class="container top-bar-content">
+      <div class="top-bar-left">
+        <span>⚡ Express 30-Minute Delivery Available!</span>
+        <span>📞 Helpline: +92 300 1234567</span>
+      </div>
+      <div class="top-bar-right">
+        <div class="branch-select-wrapper">
+          <span>📍 Store Branch:</span>
+          <select class="branch-select" id="branch-select">
+            <option value="lahore">Lahore Main Branch (Gulberg)</option>
+            <option value="karachi">Karachi Superstore (DHA)</option>
+            <option value="islamabad">Islamabad Mart (F-7)</option>
+          </select>
+        </div>
+        <button class="currency-toggle" onclick="toggleCurrency()" title="Toggle Currency (PKR / USD)">PKR</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Header Navbar -->
+  <header class="navbar">
+    <div class="container nav-container">
+      <a href="#" class="brand-logo" onclick="switchTab('shop')">
+        <div class="brand-icon">Z</div>
+        <div>Zain<span>Mart</span></div>
+      </a>
+
+      <!-- Live Search Bar -->
+      <div class="search-wrapper">
+        <div class="search-input-group">
+          <input type="text" id="main-search-input" class="search-input" placeholder="Search fresh fruits, milk, rice, snacks..." autocomplete="off" />
+          <button class="search-btn" title="Search">🔍</button>
+        </div>
+        <div id="search-dropdown" class="search-results-dropdown"></div>
+      </div>
+
+      <!-- Nav Action Controls -->
+      <div class="nav-actions">
+        <button class="icon-btn" id="theme-toggle-btn" onclick="toggleTheme()" title="Toggle Light/Dark Theme">🌙</button>
+        
+        <button class="icon-btn" onclick="switchTab('wishlist')" title="Wishlist">
+          🤍
+          <span class="badge wishlist-badge-count">0</span>
+        </button>
+
+        <button class="cart-summary-btn" onclick="openCartDrawer()">
+          <span>🛒 Cart</span>
+          <span class="badge cart-badge-count">0</span>
+          <span id="nav-cart-total-price" style="margin-left: 0.25rem;">Rs. 0</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Navigation Bar -->
+    <nav class="main-nav">
+      <div class="container">
+        <ul class="nav-links">
+          <li><a href="#" class="nav-link active" data-tab="shop">🛍️ Shop Catalog</a></li>
+          <li><a href="#" class="nav-link" data-tab="categories">🏷️ Categories</a></li>
+          <li><a href="#" class="nav-link" data-tab="recipes">🥗 Shop by Recipe</a></li>
+          <li><a href="#" class="nav-link" data-tab="wishlist">❤️ Saved Wishlist</a></li>
+          <li><a href="#" class="nav-link" data-tab="track">🚚 Track Delivery</a></li>
+          <li><a href="#" class="nav-link" data-tab="admin" style="color: var(--accent); font-weight: 700;">⚙️ Admin Portal</a></li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+
+  <!-- MAIN CONTAINER -->
+  <main class="container" style="min-height: 70vh; padding-top: 1rem;">
+
+    <!-- SECTION 1: SHOP CATALOG (DEFAULT) -->
+    <section id="section-shop" class="tab-section">
+      <!-- Hero Banner Grid -->
+      <div class="hero-section">
+        <div class="hero-grid">
+          <div class="hero-banner-main" style="background-image: url('images/hero.jpg');">
+            <div class="hero-banner-overlay"></div>
+            <div class="hero-content">
+              <span class="hero-tag">Zain Mart Superstore</span>
+              <h1 class="hero-title">Fresh, Organic & Everyday Essentials</h1>
+              <p class="hero-subtitle">Hand-picked farm produce, fresh daily dairy, quality meats and pantry goods delivered to your doorstep.</p>
+              <button class="btn-primary" onclick="window.scrollTo({top: 600, behavior: 'smooth'})">
+                🛒 Order Fresh Produce Now
+              </button>
+            </div>
+          </div>
+
+          <div class="hero-side-deals">
+            <div class="side-deal-card" style="background-image: url('images/fresh_produce.jpg');">
+              <div class="side-deal-overlay"></div>
+              <div class="side-deal-content">
+                <h4>Farm Fresh Vegetables</h4>
+                <p>Flat 20% OFF Daily Deals</p>
+              </div>
+            </div>
+            <div class="side-deal-card" style="background-image: url('images/dairy_bakery.jpg');">
+              <div class="side-deal-overlay"></div>
+              <div class="side-deal-content">
+                <h4>Artisan Bakery & Dairy</h4>
+                <p>Baked Fresh Every Morning</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Category Bar -->
+      <div class="categories-bar">
+        <div class="section-header">
+          <h2 class="section-title">Browse By Category</h2>
+        </div>
+        <div id="categories-grid-container" class="categories-grid"></div>
+      </div>
+
+      <!-- Shop Controls (Filter, Sort, View) -->
+      <div class="shop-controls">
+        <div class="filter-group">
+          <span style="font-weight: 700; font-size: 0.9rem;">Sort By:</span>
+          <select class="select-control" onchange="handleSortChange(this.value)">
+            <option value="featured">Featured / Popular</option>
+            <option value="price-low">Price: Low to High</option>
+            <option value="price-high">Price: High to Low</option>
+            <option value="rating">Highest Rated</option>
+          </select>
+        </div>
+
+        <div class="view-toggle">
+          <button id="btn-view-grid" class="view-btn active" onclick="setViewMode('grid')" title="Grid View">📱 Grid</button>
+          <button id="btn-view-list" class="view-btn" onclick="setViewMode('list')" title="List View">📄 List</button>
+        </div>
+      </div>
+
+      <!-- Product Cards Grid -->
+      <div id="products-grid-container" class="products-grid"></div>
+    </section>
+
+    <!-- SECTION 2: CATEGORIES PAGE -->
+    <section id="section-categories" class="tab-section" style="display: none; padding: 2rem 0;">
+      <h2 style="margin-bottom: 1.5rem;">Explore All Product Categories</h2>
+      <div class="categories-grid" style="grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));">
+        <div class="category-card" onclick="selectCategory('fresh-produce')">
+          <div class="category-icon">🍎</div>
+          <h3 class="category-title" style="font-size: 1.1rem;">Fresh Fruits & Veggies</h3>
+          <p style="font-size: 0.8rem; color: var(--text-muted);">Apples, Bananas, Spinach, Tomatoes</p>
+        </div>
+        <div class="category-card" onclick="selectCategory('dairy-bakery')">
+          <div class="category-icon">🥛</div>
+          <h3 class="category-title" style="font-size: 1.1rem;">Dairy & Bakery</h3>
+          <p style="font-size: 0.8rem; color: var(--text-muted);">Fresh Milk, Butter, Sourdough Bread</p>
+        </div>
+        <div class="category-card" onclick="selectCategory('meat-poultry')">
+          <div class="category-icon">🥩</div>
+          <h3 class="category-title" style="font-size: 1.1rem;">Meat & Seafood</h3>
+          <p style="font-size: 0.8rem; color: var(--text-muted);">Halal Chicken, Beef Cuts, Mutton</p>
+        </div>
+        <div class="category-card" onclick="selectCategory('pantry')">
+          <div class="category-icon">🌾</div>
+          <h3 class="category-title" style="font-size: 1.1rem;">Rice, Oils & Spices</h3>
+          <p style="font-size: 0.8rem; color: var(--text-muted);">Basmati Rice, Olive Oil, Raw Honey</p>
+        </div>
+        <div class="category-card" onclick="selectCategory('beverages')">
+          <div class="category-icon">🧃</div>
+          <h3 class="category-title" style="font-size: 1.1rem;">Beverages & Juices</h3>
+          <p style="font-size: 0.8rem; color: var(--text-muted);">Fresh Orange Juice, Soda, Tea</p>
+        </div>
+        <div class="category-card" onclick="selectCategory('snacks')">
+          <div class="category-icon">🍿</div>
+          <h3 class="category-title" style="font-size: 1.1rem;">Snacks & Sweets</h3>
+          <p style="font-size: 0.8rem; color: var(--text-muted);">Roasted Almonds, Chocolates</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 3: SHOP BY RECIPE MEAL PLANNER -->
+    <section id="section-recipes" class="tab-section" style="display: none; padding: 2rem 0;">
+      <div style="text-align: center; max-width: 600px; margin: 0 auto 2rem auto;">
+        <h2>🥗 Shop By Recipe Meal Kits</h2>
+        <p style="color: var(--text-muted);">Cooking something special? Select a recipe bundle below and add all fresh ingredients directly to your shopping cart with one click!</p>
+      </div>
+      <div id="recipe-cards-container" class="recipe-grid"></div>
+    </section>
+
+    <!-- SECTION 4: WISHLIST -->
+    <section id="section-wishlist" class="tab-section" style="display: none; padding: 2rem 0;">
+      <div id="wishlist-content"></div>
+    </section>
+
+    <!-- SECTION 5: TRACK ORDER -->
+    <section id="section-track" class="tab-section" style="display: none; padding: 2rem 0;">
+      <div id="order-tracker-content"></div>
+    </section>
+
+    <!-- SECTION 6: ADMIN DASHBOARD -->
+    <section id="section-admin" class="tab-section" style="display: none;">
+      <div class="admin-container">
+        <aside class="admin-sidebar">
+          <h3 style="margin-bottom: 1.25rem; font-size: 1.1rem;">⚙️ Admin Control</h3>
+          <div class="admin-nav-item active" data-tab="products" onclick="switchAdminTab('products')">
+            📦 Products Inventory
+          </div>
+          <div class="admin-nav-item" data-tab="orders" onclick="switchAdminTab('orders')">
+            🚚 Customer Orders
+          </div>
+          <div class="admin-nav-item" data-tab="analytics" onclick="switchAdminTab('analytics')">
+            📊 Sales Analytics
+          </div>
+        </aside>
+
+        <main id="admin-content-body" class="admin-content"></main>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- CART SLIDE-OUT DRAWER -->
+  <div id="cart-drawer-backdrop" class="cart-drawer-backdrop" onclick="closeCartDrawer()"></div>
+  <div id="cart-drawer" class="cart-drawer">
+    <div class="cart-header">
+      <h3>🛒 Shopping Cart (<span class="cart-badge-count">0</span>)</h3>
+      <button class="modal-close" onclick="closeCartDrawer()" title="Close">✕</button>
+    </div>
+    <div id="cart-drawer-body" class="cart-body"></div>
+    <div id="cart-drawer-footer" class="cart-footer"></div>
+  </div>
+
+  <!-- CHECKOUT MODAL -->
+  <div id="checkout-modal" class="modal-backdrop">
+    <div class="modal-card">
+      <button class="modal-close" onclick="closeCheckoutModal()">✕</button>
+      <div class="modal-header">
+        <h2>🔒 Fast & Secure Checkout</h2>
+        <p style="font-size: 0.85rem; color: var(--text-muted);">Enter shipping address and select delivery slot</p>
+      </div>
+      <div class="modal-body">
+        <form id="checkout-form" onsubmit="handleCheckoutSubmit(event)">
+          <div id="checkout-order-summary"></div>
+
+          <h4 style="margin-bottom: 0.75rem;">1. Shipping Information</h4>
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Full Name *</label>
+              <input type="text" id="checkout-name" class="form-input" required placeholder="e.g. Zain Ahmed" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Mobile Phone Number *</label>
+              <input type="tel" id="checkout-phone" class="form-input" required placeholder="+92 300 1234567" />
+            </div>
+            <div class="form-group full-width">
+              <label class="form-label">Street Address *</label>
+              <input type="text" id="checkout-address" class="form-input" required placeholder="House #, Street #, Block / Sector" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">City *</label>
+              <input type="text" id="checkout-city" class="form-input" required value="Lahore" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Preferred Delivery Slot</label>
+              <select id="checkout-slot" class="form-select">
+                <option value="Express (Within 30 Mins)">⚡ Express (Within 30 Mins)</option>
+                <option value="Today Evening (5 PM - 8 PM)">Today Evening (5 PM - 8 PM)</option>
+                <option value="Tomorrow Morning (9 AM - 12 PM)">Tomorrow Morning (9 AM - 12 PM)</option>
+              </select>
+            </div>
+          </div>
+
+          <h4 style="margin-bottom: 0.75rem; margin-top: 1rem;">2. Select Payment Method</h4>
+          <div class="payment-options">
+            <div class="payment-option-card active" onclick="selectPaymentMethod(this, 'COD')">
+              <input type="radio" name="payment_method" value="Cash on Delivery" checked style="display:none;" />
+              <div>💵 Cash on Delivery</div>
+              <small style="font-size:0.75rem; color:var(--text-muted);">Pay upon arrival</small>
+            </div>
+            <div class="payment-option-card" onclick="selectPaymentMethod(this, 'JazzCash')">
+              <input type="radio" name="payment_method" value="JazzCash / EasyPaisa" style="display:none;" />
+              <div>📱 Mobile Wallet</div>
+              <small style="font-size:0.75rem; color:var(--text-muted);">JazzCash / EasyPaisa</small>
+            </div>
+            <div class="payment-option-card" onclick="selectPaymentMethod(this, 'Card')">
+              <input type="radio" name="payment_method" value="Credit / Debit Card" style="display:none;" />
+              <div>💳 Credit/Debit Card</div>
+              <small style="font-size:0.75rem; color:var(--text-muted);">Visa / MasterCard</small>
+            </div>
+          </div>
+
+          <button type="submit" class="btn-primary" style="width: 100%; padding: 0.85rem; font-size: 1.05rem; margin-top: 1rem;">
+            🎉 Complete Order & Send Delivery Request
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUICK VIEW PRODUCT MODAL -->
+  <div id="quick-view-modal" class="modal-backdrop">
+    <div class="modal-card">
+      <button class="modal-close" onclick="closeQuickViewModal()">✕</button>
+      <div id="quick-view-modal-content" class="modal-body"></div>
+    </div>
+  </div>
+
+  <!-- ORDER RECEIPT MODAL -->
+  <div id="receipt-modal" class="modal-backdrop">
+    <div class="modal-card" style="max-width: 600px;">
+      <button class="modal-close" onclick="closeReceiptModal()">✕</button>
+      <div id="receipt-modal-content" class="modal-body"></div>
+    </div>
+  </div>
+
+  <!-- ADMIN ADD/EDIT PRODUCT MODAL -->
+  <div id="admin-product-modal" class="modal-backdrop">
+    <div class="modal-card">
+      <button class="modal-close" onclick="closeAdminProductModal()">✕</button>
+      <div class="modal-header">
+        <h2 id="admin-product-modal-title">Add New Product</h2>
+      </div>
+      <div class="modal-body">
+        <form onsubmit="handleSaveProductForm(event)">
+          <input type="hidden" id="admin-product-id" />
+          
+          <div class="form-group">
+            <label class="form-label">Product Name *</label>
+            <input type="text" id="admin-product-name" class="form-input" required placeholder="e.g. Fresh Mangoes (1kg)" />
+          </div>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Category *</label>
+              <select id="admin-product-category" class="form-select">
+                <option value="fresh-produce">Fresh Fruits & Veggies</option>
+                <option value="dairy-bakery">Dairy & Bakery</option>
+                <option value="meat-poultry">Meat & Seafood</option>
+                <option value="pantry">Rice, Oils & Spices</option>
+                <option value="beverages">Beverages & Juices</option>
+                <option value="snacks">Snacks & Sweets</option>
+                <option value="household">Household & Cleaning</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Price (PKR) *</label>
+              <input type="number" id="admin-product-price" class="form-input" required placeholder="250" />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Unit / Weight *</label>
+              <input type="text" id="admin-product-unit" class="form-input" required placeholder="1 kg, 500ml, Pack of 6" />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Stock Quantity *</label>
+              <input type="number" id="admin-product-stock" class="form-input" required placeholder="50" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Image URL *</label>
+            <input type="url" id="admin-product-image" class="form-input" required placeholder="https://images.unsplash.com/..." />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Description</label>
+            <textarea id="admin-product-desc" class="form-textarea" rows="3" placeholder="Enter product description and details..."></textarea>
+          </div>
+
+          <button type="submit" class="btn-primary" style="width: 100%; padding: 0.75rem;">
+            💾 Save Product to Inventory
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <div class="brand-logo" style="margin-bottom: 1rem;">
+            <div class="brand-icon">Z</div>
+            <div style="color: white;">Zain<span style="color: var(--accent);">Mart</span></div>
+          </div>
+          <p style="font-size: 0.85rem; margin-bottom: 1rem;">Zain Mart is your trusted superstore for farm-fresh groceries, organic produce, daily dairy, meats and everyday household essentials delivered in 30 minutes.</p>
+          <div style="display: flex; gap: 0.5rem; font-size: 1.2rem;">
+            <span>📱</span> <span>🌐</span> <span>💬</span>
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <h4>Quick Links</h4>
+          <ul class="footer-links">
+            <li><a href="#" onclick="switchTab('shop')">Shop All Products</a></li>
+            <li><a href="#" onclick="switchTab('recipes')">Shop by Recipe Kits</a></li>
+            <li><a href="#" onclick="switchTab('track')">Track Active Order</a></li>
+            <li><a href="#" onclick="switchTab('wishlist')">Saved Wishlist</a></li>
+            <li><a href="#" onclick="switchTab('admin')">Store Admin Portal</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Store Branches</h4>
+          <ul class="footer-links" style="font-size: 0.85rem;">
+            <li>📍 <strong>Lahore Main:</strong> Main Boulevard, Gulberg III</li>
+            <li>📍 <strong>Karachi Superstore:</strong> Commercial Area, DHA Phase 6</li>
+            <li>📍 <strong>Islamabad Branch:</strong> Super Market, F-6 Markaz</li>
+            <li style="margin-top: 0.5rem; color: var(--accent);">🕒 Timings: 7:00 AM - 12:00 AM (7 Days)</li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Need Assistance?</h4>
+          <p style="font-size: 0.85rem; margin-bottom: 1rem;">Have questions about your order or delivery?</p>
+          <a href="https://wa.me/923001234567" target="_blank" class="btn-primary" style="background: #25D366; font-size: 0.85rem; padding: 0.6rem 1rem;">
+            💬 Chat on WhatsApp
+          </a>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>© 2026 Zain Mart Superstore. All Rights Reserved. Designed for maximum convenience and fresh living.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Modular Scripts -->
+  <script src="js/products-data.js"></script>
+  <script src="js/recipe-planner.js"></script>
+  <script src="js/cart-checkout.js"></script>
+  <script src="js/admin.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
